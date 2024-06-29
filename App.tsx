@@ -1,20 +1,47 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { BlurView } from 'expo-blur';
+import MainScreen from './Screens/MainScreen';
+import Screen2 from './Screens/Screen2';
+import Screen3 from './Screens/Screen3';
+import Screen4 from './Screens/Screen4';
+import { RootStackParamList } from './types';
 
-export default function App() {
+const Stack = createStackNavigator<RootStackParamList>();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Main">
+        <Stack.Screen name="Main" component={MainScreen} options={{
+          headerTransparent: true,
+          headerTitle: '',
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+        }}/>
+        <Stack.Screen name="Screen2" component={Screen2} options={{
+          headerTransparent: true,
+          headerBackTitle: 'Geri',
+          headerTintColor: 'white',
+          headerTitle: 'ChatGPT'
+        }}/>
+        <Stack.Screen name="Screen3" component={Screen3} options={{
+          headerTransparent: true,
+          headerBackTitle: 'Geri',
+          headerTintColor: 'white',
+          headerTitle: 'ImageGPT'
+        }}/>
+        <Stack.Screen name="Screen4" component={Screen4} options={{
+          headerTransparent: true,
+          headerBackTitle: 'Geri',
+          headerTintColor: 'white',
+          headerTitle: 'BackRemove'
+        }}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default App;
