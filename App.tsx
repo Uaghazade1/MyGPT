@@ -23,19 +23,19 @@ const App = () => {
         }}/>
         <Stack.Screen name="Screen2" component={Screen2} options={{
           headerTransparent: true,
-          headerBackTitle: 'Geri',
+          headerBackTitle: 'Back',
           headerTintColor: 'white',
           headerTitle: 'ChatGPT'
         }}/>
         <Stack.Screen name="Screen3" component={Screen3} options={{
           headerTransparent: true,
-          headerBackTitle: 'Geri',
+          headerBackTitle: 'Back',
           headerTintColor: 'white',
           headerTitle: 'ImageGPT'
         }}/>
         <Stack.Screen name="Screen4" component={Screen4} options={{
           headerTransparent: true,
-          headerBackTitle: 'Geri',
+          headerBackTitle: 'Back',
           headerTintColor: 'white',
           headerTitle: 'BackRemove'
         }}/>

@@ -1,17 +1,23 @@
 // App.tsx
-import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Button, ScrollView } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  StyleSheet, Text, TextInput, View, TouchableOpacity, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView,
+  Platform, ScrollView
+} from 'react-native';
 import axios, { AxiosError } from 'axios';
+import { MaterialIcons } from '@expo/vector-icons';
 import { OPENAI_API_KEY } from './../config';
+import { AntDesign } from '@expo/vector-icons';
 
 interface Message {
   sender: 'user' | 'bot';
   text: string;
 }
 
-export default function Screen2() {
+export default function App() {
   const [inputText, setInputText] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const isAxiosError = (error: unknown): error is AxiosError => {
     return (error as AxiosError).isAxiosError !== undefined;
@@ -56,25 +62,35 @@ export default function Screen2() {
     setInputText('');
   };
 
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+  }, [messages]);
+
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.chatContainer}>
-        {messages.map((message, index) => (
-          <View key={index} style={styles.messageContainer}>
-            <Text style={message.sender === 'user' ? styles.userMessage : styles.botMessage}>
-              {message.text}
-            </Text>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS !== 'web' ? 'padding' : 'height'}>
+         
+            <ScrollView style={styles.messagesContainer} showsVerticalScrollIndicator={false}>
+              {messages.map((message, index) => (
+                <View key={index} style={styles.messageContainer}>
+                  <Text style={message.sender === 'user' ? styles.userMessage : styles.botMessage}>
+                    {message.text}
+                  </Text>
+                </View>
+              ))}
+            </ScrollView>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={inputText}
+              onChangeText={setInputText}
+              placeholder="Type your message..."
+              placeholderTextColor="gray"
+            />
+            <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
+            <AntDesign name="right" size={24} color="white" />           
+             </TouchableOpacity>
           </View>
-        ))}
-      </ScrollView>
-      <TextInput
-        style={styles.input}
-        value={inputText}
-        onChangeText={setInputText}
-        placeholder="Type your message..."
-      />
-      <Button title="Send" onPress={handleSend} />
-    </View>
+      </KeyboardAvoidingView>
   );
 }
 
@@ -82,44 +98,56 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#252525',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    paddingTop: 10,
+    height: 100
   },
-  chatContainer: {
-    flex: 1,
-    width: '100%',
-    marginBottom: 10,
-    marginTop: 100,
-    backgroundColor: 'yellow'
+ 
+  scrollViewContent: {
+    flexGrow: 1,
+  },
+  messagesContainer: {
+    paddingHorizontal: 20,
+    marginTop: 70,
+    marginBottom: 40
   },
   messageContainer: {
     marginVertical: 5,
-    borderRadius: 10,
-    backgroundColor: 'green'
   },
   userMessage: {
     alignSelf: 'flex-end',
-    backgroundColor: 'red',
     padding: 10,
+    color: 'white',
     borderWidth: 1,
+    borderColor: 'gray',
     borderRadius: 10,
   },
   botMessage: {
     alignSelf: 'flex-start',
-    backgroundColor: 'blue',
     padding: 10,
+    color: 'yellow',
     borderWidth: 1,
+    borderColor: 'gray',
     borderRadius: 10,
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
-    borderRadius: 5,
-    width: '100%',
-    paddingHorizontal: 10,
-    marginBottom: 10,
+    borderColor: 'gray',
+    borderRadius: 10,
+    paddingLeft: 10,
+    marginHorizontal: 10,
+    bottom: 20
+  },
+  input: {
+    flex: 1,
+    height: 40,
     color: 'white'
+  },
+  sendButton: {
+    backgroundColor: '#252525',
+    borderRadius: 50,
+    padding: 10,
+    marginLeft: 10,
   },
 });
